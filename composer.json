@@ -1,0 +1,32 @@
+{
+  "name": "webdevcave/collections",
+  "description": "A PHP library for managing collections of data with support for nested keys.",
+  "keywords": [
+    "php",
+    "collection",
+    "data",
+    "nested-keys",
+    "array",
+    "object",
+    "utility",
+    "helper",
+    "package",
+    "library",
+    "framework"
+  ],
+  "authors": [
+    {
+      "name": "Carlos Alberto Bertholdo Carucce",
+      "homepage": "https://github.com/carloscarucce"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "WebdevCave\\Collections\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=8.0",
+    "ext-ds": "*"
+  }
+}
