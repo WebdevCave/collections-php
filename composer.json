@@ -1,6 +1,7 @@
 {
   "name": "webdevcave/collections",
   "description": "A PHP library for managing collections of data with support for nested keys.",
+  "license": "MIT",
   "keywords": [
     "php",
     "collection",
