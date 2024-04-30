@@ -135,7 +135,17 @@ class Collection implements CollectionInterface
      */
     public function get(string $index): mixed
     {
-        return $this->data[$index] ?? null;
+        $layer = &$this->data;
+
+        foreach (explode('.', $index) as $key) {
+            if (!isset($layer[$key])) {
+                return null;
+            }
+
+            $layer = &$layer[$key];
+        }
+
+        return $layer;
     }
 
     /**
@@ -144,7 +154,17 @@ class Collection implements CollectionInterface
      */
     public function has(string $index): bool
     {
-        return isset($this->data[$index]);
+        $layer = &$this->data;
+
+        foreach (explode('.', $index) as $key) {
+            if (!isset($layer[$key])) {
+                return false;
+            }
+
+            $layer = &$layer[$key];
+        }
+
+        return true;
     }
 
     /**
@@ -162,7 +182,17 @@ class Collection implements CollectionInterface
      */
     public function set(string $index, mixed $value): void
     {
-        $this->data[$index] = $value;
+        $layer = &$this->data;
+
+        foreach (explode('.', $index) as $key) {
+            if (!isset($layer[$key]) || !is_array($layer[$key])) {
+                $layer[$key] = [];
+            }
+
+            $layer = &$layer[$key];
+        }
+
+        $layer = $value;
     }
 
     /**
