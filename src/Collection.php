@@ -90,6 +90,15 @@ class Collection implements CollectionInterface
     }
 
     /**
+     * @param mixed $value
+     * @return void
+     */
+    public function append(mixed $value): void
+    {
+        $this->data[] = $value;
+    }
+
+    /**
      * @return void
      */
     public function clear(): void
@@ -173,6 +182,16 @@ class Collection implements CollectionInterface
     public function isEmpty(): bool
     {
         return empty($this->data);
+    }
+
+    /**
+     * @return LazyCollection
+     */
+    public function lazy(): LazyCollection
+    {
+        return LazyCollection::from(function(){
+            yield from $this->data;
+        });
     }
 
     /**
@@ -274,24 +293,5 @@ class Collection implements CollectionInterface
     public function jsonSerialize(): mixed
     {
         return $this->data;
-    }
-
-    // interface Serializable
-
-    /**
-     * @return string
-     */
-    public function serialize(): string
-    {
-        return serialize($this->data);
-    }
-
-    /**
-     * @param string $data
-     * @return void
-     */
-    public function unserialize(string $data): void
-    {
-        $this->data = unserialize($data);
     }
 }

@@ -26,6 +26,11 @@
       "WebdevCave\\Collections\\": "src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "WebdevCave\\Colections\\Tests\\": "tests"
+    }
+  },
   "require": {
     "php": ">=8.0"
   },

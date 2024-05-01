@@ -1,25 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WebdevCave\Collections;
 
-use Generator;
-use WebdevCave\Collections\LazyCollectionInterface;
+use Traversable;
 
 class LazyCollection implements LazyCollectionInterface
 {
+    private Traversable $traversable;
+
     /**
-     * @param Generator $generator
+     * @param Traversable|callable $traversable
      */
-    public function __construct(private Generator $generator)
+    public function __construct(Traversable|callable $traversable)
     {
-        // Does nothing
+        if (!($traversable instanceof Traversable)) {
+            $traversable = $traversable();
+        }
+
+        $this->traversable = $traversable;
     }
 
     /**
-     * @param Generator $generator
+     * @param Traversable|callable $generator
      * @return static
      */
-    public static function from(Generator $generator): static
+    public static function from(Traversable|callable $generator): static
     {
         return new static($generator);
     }
@@ -37,17 +44,16 @@ class LazyCollection implements LazyCollectionInterface
      */
     public function toArray(): array
     {
-        return iterator_to_array($this->generator);
+        return iterator_to_array($this->traversable);
     }
 
     // interface Countable
-
 
     /**
      * @return int
      */
     public function count(): int
     {
-        return iterator_count($this->generator);
+        return iterator_count($this->traversable);
     }
 }

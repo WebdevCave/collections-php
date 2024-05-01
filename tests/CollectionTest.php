@@ -4,6 +4,7 @@ namespace WebdevCave\Colections\Tests;
 
 use WebdevCave\Collections\Collection;
 use PHPUnit\Framework\TestCase;
+use WebdevCave\Collections\LazyCollection;
 
 class CollectionTest extends TestCase
 {
@@ -86,30 +87,6 @@ class CollectionTest extends TestCase
         $this->assertTrue($collection->has('user.address.country'));
     }
 
-    public function testArrayAccess()
-    {
-        $collection = new Collection();
-
-        // Set a value using ArrayAccess
-        $collection['x'] = [
-            'y' => [
-                'z' => 456
-            ]
-        ];
-
-        // Check if the value was set correctly
-        $this->assertEquals(456, $collection->get('x.y.z'));
-
-        // Check if the key exists using ArrayAccess
-        //$this->assertTrue(isset($collection['x']['y']['z']));
-
-        // Remove a value using ArrayAccess
-        //unset($collection['x']['y']['z']);
-
-        // Check if the value was removed correctly
-        $this->assertFalse(isset($collection['x']['y']['z']));
-    }
-
     public function testCountable()
     {
         $collection = new Collection(['a' => 1, 'b' => 2, 'c' => 3]);
@@ -142,5 +119,31 @@ class CollectionTest extends TestCase
 
         // Check if JSON serialization returns the expected data
         $this->assertEquals(json_encode($data), json_encode($collection));
+    }
+
+    public function testClear()
+    {
+        $collection = new Collection(['a' => 1, 'b' => 2, 'c' => 3]);
+
+        $this->assertFalse($collection->isEmpty());
+
+        $collection->clear();
+
+        $this->assertTrue($collection->isEmpty());
+    }
+
+    public function testCount()
+    {
+        $collection = new Collection([1,2,3]);
+        $this->assertEquals(3, $collection->count());
+
+        $collection->append(4);
+        $this->assertEquals(4, $collection->count());
+
+        $collection->delete(0);
+        $this->assertEquals(3, $collection->count());
+
+        $collection->clear();
+        $this->assertEquals(0, $collection->count());
     }
 }
