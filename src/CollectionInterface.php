@@ -8,7 +8,7 @@ use IteratorAggregate;
 use JsonSerializable;
 use Serializable;
 
-interface CollectionInterface extends ArrayAccess, Countable, IteratorAggregate, JsonSerializable
+interface CollectionInterface extends ArrayAccess, Countable, IteratorAggregate, JsonSerializable, CollectionHelpersInterface
 {
     public static function from(array|CollectionInterface $data): static;
     public function append(mixed $value): void;
@@ -20,5 +20,4 @@ interface CollectionInterface extends ArrayAccess, Countable, IteratorAggregate,
     public function isEmpty(): bool;
     public function lazy(): LazyCollection;
     public function set(string $index, mixed $value): void;
-    public function toArray(): array;
 }

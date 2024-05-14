@@ -32,6 +32,44 @@ class LazyCollection implements LazyCollectionInterface
     }
 
     /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return iterator_count($this->traversable);
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    public function contains(mixed $value): bool
+    {
+        $found = false;
+
+        foreach ($this->traversable as $item) {
+            $found = $item == $value;
+
+            if ($found) {
+                break;
+            }
+        }
+
+        return $found;
+    }
+
+    /**
+     * @param callable $callback
+     * @return void
+     */
+    public function each(callable $callback): void
+    {
+        foreach ($this->traversable as $key => $value) {
+            $callback($value, $key);
+        }
+    }
+
+    /**
      * @return bool
      */
     public function isEmpty(): bool
@@ -45,15 +83,5 @@ class LazyCollection implements LazyCollectionInterface
     public function toArray(): array
     {
         return iterator_to_array($this->traversable);
-    }
-
-    // interface Countable
-
-    /**
-     * @return int
-     */
-    public function count(): int
-    {
-        return iterator_count($this->traversable);
     }
 }

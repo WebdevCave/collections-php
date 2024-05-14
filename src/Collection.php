@@ -107,11 +107,28 @@ class Collection implements CollectionInterface
     }
 
     /**
+     * @param mixed $value
+     * @return bool
+     */
+    public function contains(mixed $value): bool
+    {
+        return in_array($value, $this->data);
+    }
+
+    /**
      * @return $this
      */
     public function copy(): static
     {
         return new static($this->data);
+    }
+
+    /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->data);
     }
 
     /**
@@ -136,6 +153,17 @@ class Collection implements CollectionInterface
 
         // Remove o último elemento da chave
         unset($data[array_shift($keys)]);
+    }
+
+    /**
+     * @param callable $callback
+     * @return void
+     */
+    public function each(callable $callback): void
+    {
+        foreach ($this->data as $key => $value) {
+            $callback($value, $key);
+        }
     }
 
     /**
@@ -177,6 +205,22 @@ class Collection implements CollectionInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function jsonSerialize(): mixed
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return Traversable
+     */
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator($this->data);
+    }
+
+    /**
      * @return bool
      */
     public function isEmpty(): bool
@@ -193,36 +237,6 @@ class Collection implements CollectionInterface
             yield from $this->data;
         });
     }
-
-    /**
-     * @param string $index
-     * @param mixed $value
-     * @return void
-     */
-    public function set(string $index, mixed $value): void
-    {
-        $layer = &$this->data;
-
-        foreach (explode('.', $index) as $key) {
-            if (!isset($layer[$key]) || !is_array($layer[$key])) {
-                $layer[$key] = [];
-            }
-
-            $layer = &$layer[$key];
-        }
-
-        $layer = $value;
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return $this->data;
-    }
-
-    // interface ArrayAccess
 
     /**
      * @param $offset
@@ -265,32 +279,30 @@ class Collection implements CollectionInterface
         unset($this->data[$offset]);
     }
 
-    // interface Countable
-
     /**
-     * @return int
+     * @param string $index
+     * @param mixed $value
+     * @return void
      */
-    public function count(): int
+    public function set(string $index, mixed $value): void
     {
-        return count($this->data);
+        $layer = &$this->data;
+
+        foreach (explode('.', $index) as $key) {
+            if (!isset($layer[$key]) || !is_array($layer[$key])) {
+                $layer[$key] = [];
+            }
+
+            $layer = &$layer[$key];
+        }
+
+        $layer = $value;
     }
 
-    // interface IteratorAggregate
-
     /**
-     * @return Traversable
+     * @return array
      */
-    public function getIterator(): Traversable
-    {
-        return new ArrayIterator($this->data);
-    }
-
-    // interface JsonSerializable
-
-    /**
-     * @return mixed
-     */
-    public function jsonSerialize(): mixed
+    public function toArray(): array
     {
         return $this->data;
     }
